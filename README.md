@@ -49,7 +49,7 @@ cp .env.example .env.local
 
 Edit `.env.local` and set your API URL:
 ```
-NEXT_PUBLIC_API_URL=http://localhost:8000/api
+NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ```
 
 4. Start the development server:

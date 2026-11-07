@@ -48,15 +48,15 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>Enter your email and password to access your account</CardDescription>
+        <CardTitle><h1>Welcome back.</h1></CardTitle>
+        <CardDescription>Sign in to your document library and conversations.</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
-              id="email"
+              id="email" autoComplete="email"
               type="email"
               placeholder="you@example.com"
               {...register('email')}
@@ -68,7 +68,7 @@ export function LoginForm() {
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
-              id="password"
+              id="password" autoComplete="current-password"
               type="password"
               placeholder="••••••••"
               {...register('password')}

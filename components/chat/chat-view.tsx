@@ -6,7 +6,7 @@ import { ChatMessage } from './message'
 import { MessageInput } from './message-input'
 
 export function ChatView() {
-  const { messages, currentSessionId, isMessageLoading, sendMessage, fetchMessages } = useChat()
+  const { messages, currentSessionId, draftVersion, isMessageLoading, sendMessage, fetchMessages } = useChat()
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // Load messages when session changes
@@ -22,24 +22,11 @@ export function ChatView() {
   }, [messages])
 
   const handleSendMessage = async (content: string) => {
-    if (currentSessionId) {
-      await sendMessage(currentSessionId, content)
-    }
-  }
-
-  if (!currentSessionId) {
-    return (
-      <div className="flex-1 flex items-center justify-center bg-background">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-2">No chat selected</h2>
-          <p className="text-muted-foreground">Create or select a chat to get started</p>
-        </div>
-      </div>
-    )
+    await sendMessage(currentSessionId, content)
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full">
+    <div className="flex min-h-0 flex-1 flex-col">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-6 bg-background">
         <div className="max-w-4xl mx-auto space-y-6">
@@ -68,7 +55,7 @@ export function ChatView() {
       </div>
 
       {/* Input */}
-      <MessageInput onSend={handleSendMessage} isLoading={isMessageLoading} />
+      <MessageInput key={currentSessionId ?? draftVersion} onSend={handleSendMessage} isLoading={isMessageLoading} />
     </div>
   )
 }

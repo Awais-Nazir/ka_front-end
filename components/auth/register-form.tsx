@@ -61,17 +61,17 @@ export function RegisterForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Create Account</CardTitle>
-        <CardDescription>Sign up to start using the AI Knowledge Assistant</CardDescription>
+        <CardTitle><h1>Create your workspace.</h1></CardTitle>
+        <CardDescription>Create an account to upload documents and start a chat.</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="fullName">Full Name</Label>
             <Input
-              id="fullName"
+              id="fullName" autoComplete="name"
               type="text"
-              placeholder="John Doe"
+              placeholder="Your name"
               {...register('fullName')}
               disabled={isLoading}
             />
@@ -81,7 +81,7 @@ export function RegisterForm() {
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
-              id="email"
+              id="email" autoComplete="email"
               type="email"
               placeholder="you@example.com"
               {...register('email')}
@@ -93,12 +93,13 @@ export function RegisterForm() {
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
-              id="password"
+              id="password" autoComplete="new-password"
               type="password"
               placeholder="••••••••"
               {...register('password')}
               disabled={isLoading}
             />
+            <p className="text-xs text-muted-foreground">Use at least 8 characters, one uppercase letter, and one number.</p>
             {errors.password && (
               <p className="text-sm text-destructive">{errors.password.message}</p>
             )}
@@ -107,7 +108,7 @@ export function RegisterForm() {
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <Input
-              id="confirmPassword"
+              id="confirmPassword" autoComplete="new-password"
               type="password"
               placeholder="••••••••"
               {...register('confirmPassword')}

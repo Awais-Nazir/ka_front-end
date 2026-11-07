@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+export const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL?.trim() || 'http://localhost:8000/api/v1').replace(/\/+$/, '')
 
 export interface ApiError {
   message: string
@@ -101,9 +101,11 @@ export function handleApiError(error: unknown): ApiError {
   if (axios.isAxiosError(error)) {
     const data = error.response?.data as Record<string, unknown>
     return {
-      message: data?.message || error.message || 'An error occurred',
+      message: (typeof data?.message === 'string' && data.message) || error.message || 'An error occurred',
       code: error.response?.status?.toString(),
-      details: data?.details,
+      details: data?.details && typeof data.details === 'object' && !Array.isArray(data.details)
+        ? data.details as Record<string, unknown>
+        : undefined,
     }
   }
 

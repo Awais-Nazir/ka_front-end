@@ -38,10 +38,7 @@ export function StatusBadge({ status, errorMessage }: StatusBadgeProps) {
   return (
     <div className="flex items-center gap-2">
       <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm ${config.className}`}>
-        <Icon className="w-4 h-4" />
-        {status === 'PROCESSING' && (
-          <Icon className="w-4 h-4 animate-spin ml-1" />
-        )}
+        <Icon aria-hidden="true" className={`size-4 ${status === 'PROCESSING' ? 'motion-safe:animate-spin' : ''}`} />
         <span>{config.label}</span>
       </div>
       {errorMessage && (

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Send } from 'lucide-react'
 
@@ -12,15 +12,6 @@ interface MessageInputProps {
 export function MessageInput({ onSend, isLoading }: MessageInputProps) {
   const [message, setMessage] = useState('')
   const [isSending, setIsSending] = useState(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-
-  // Auto-resize textarea
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
-      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 200) + 'px'
-    }
-  }, [message])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,9 +21,8 @@ export function MessageInput({ onSend, isLoading }: MessageInputProps) {
     try {
       await onSend(message)
       setMessage('')
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto'
-      }
+    } catch {
+      // The provider displays the error. Keep the draft available for retry.
     } finally {
       setIsSending(false)
     }
@@ -50,25 +40,26 @@ export function MessageInput({ onSend, isLoading }: MessageInputProps) {
       <div className="max-w-4xl mx-auto">
         <div className="flex gap-3 items-end">
           <textarea
-            ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
+            aria-label="Message"
             placeholder="Ask a question about your documents..."
             disabled={isSending || isLoading}
             rows={1}
-            className="flex-1 rounded-lg border bg-background px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+            className="min-w-0 max-h-[200px] field-sizing-content flex-1 overflow-y-auto rounded-lg border bg-background px-4 py-3 text-base resize-none focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
           />
           <Button
             type="submit"
             size="icon"
+            aria-label="Send message"
             disabled={!message.trim() || isSending || isLoading}
-            className="flex-shrink-0"
+            className="size-11 shrink-0"
           >
             <Send className="w-4 h-4" />
           </Button>
         </div>
-        <p className="text-xs text-muted-foreground mt-2">
+        <p className="hidden sm:block text-xs text-muted-foreground mt-2">
           Press Enter to send, Shift+Enter for new line
         </p>
       </div>

@@ -1,17 +1,4 @@
-import { SessionsList } from '@/components/chat/sessions-list'
-import { ChatView } from '@/components/chat/chat-view'
+import { ChatWorkspace } from '@/components/chat/chat-workspace'
 
-export const metadata = {
-  title: 'Chat - AI Knowledge Assistant',
-}
-
-export default function ChatPage() {
-  return (
-    <div className="flex h-full">
-      <div className="w-64 hidden lg:flex">
-        <SessionsList />
-      </div>
-      <ChatView />
-    </div>
-  )
-}
+export const metadata = {title: 'Chats · Folio'}
+export default function ChatPage() { return <ChatWorkspace/> }

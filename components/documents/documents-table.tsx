@@ -1,6 +1,6 @@
 'use client'
 
-import { useDocuments, Document } from '@/lib/documents-context'
+import { useDocuments } from '@/lib/documents-context'
 import { useEffect, useState } from 'react'
 import { StatusBadge } from './status-badge'
 import { Button } from '@/components/ui/button'
@@ -19,7 +19,7 @@ import {
 export function DocumentsTable() {
   const { documents, isLoading, deleteDocument, fetchDocuments } = useDocuments()
   const [deleteDocId, setDeleteDocId] = useState<string | null>(null)
-  const [isPolling, setIsPolling] = useState(true)
+
 
   useEffect(() => {
     fetchDocuments()
@@ -27,23 +27,10 @@ export function DocumentsTable() {
 
   // Poll for document status updates
   useEffect(() => {
-    if (!isPolling) return
-
-    const interval = setInterval(() => {
-      const hasPendingOrProcessing = documents.some(
-        (doc) => doc.status === 'PENDING' || doc.status === 'PROCESSING'
-      )
-
-      if (hasPendingOrProcessing) {
-        fetchDocuments()
-      } else {
-        setIsPolling(false)
-      }
-    }, 3000) // Poll every 3 seconds
-
+    if (!documents.some(doc => doc.status === 'PENDING' || doc.status === 'PROCESSING')) return
+    const interval = setInterval(fetchDocuments, 3000)
     return () => clearInterval(interval)
-  }, [documents, fetchDocuments, isPolling])
-
+  }, [documents, fetchDocuments])
   const handleDelete = async (id: string) => {
     await deleteDocument(id)
     setDeleteDocId(null)
@@ -67,7 +54,7 @@ export function DocumentsTable() {
 
   if (documents.length === 0) {
     return (
-      <div className="text-center py-12">
+      <div className="rounded-lg border bg-card text-center py-10">
         <p className="text-muted-foreground">No documents uploaded yet</p>
         <p className="text-sm text-muted-foreground mt-1">
           Upload your first document using the form above
@@ -80,7 +67,7 @@ export function DocumentsTable() {
     <>
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="document-table w-full text-sm">
             <thead>
               <tr className="border-b bg-muted/50">
                 <th className="text-left p-4 font-semibold">Filename</th>
@@ -93,12 +80,12 @@ export function DocumentsTable() {
             <tbody>
               {documents.map((doc) => (
                 <tr key={doc.id} className="border-b hover:bg-muted/30 transition-colors">
-                  <td className="p-4 font-medium">{doc.filename}</td>
+                  <td className="p-4 font-medium [overflow-wrap:anywhere]">{doc.original_name || doc.filename}</td>
                   <td className="p-4 text-muted-foreground">
                     {formatFileSize(doc.file_size)}
                   </td>
                   <td className="p-4">
-                    <StatusBadge status={doc.status} errorMessage={doc.error_message} />
+                    <StatusBadge status={doc.status} errorMessage={doc.error_message ?? undefined} />
                   </td>
                   <td className="p-4 text-muted-foreground">
                     {formatDistanceToNow(new Date(doc.created_at), { addSuffix: true })}
@@ -107,6 +94,7 @@ export function DocumentsTable() {
                     <Button
                       variant="ghost"
                       size="sm"
+                      aria-label={`Delete ${doc.original_name || doc.filename}`}
                       onClick={() => setDeleteDocId(doc.id)}
                       className="text-destructive hover:text-destructive"
                     >
@@ -131,10 +119,10 @@ export function DocumentsTable() {
           <div className="flex gap-4 justify-end">
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
+              className="bg-red-700 text-white hover:bg-red-800"
               onClick={() => deleteDocId && handleDelete(deleteDocId)}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Delete document
             </AlertDialogAction>
           </div>
         </AlertDialogContent>

@@ -58,25 +58,26 @@ export function UploadArea() {
       onDragLeave={handleDrag}
       onDragOver={handleDrag}
       onDrop={handleDrop}
-      className={`rounded-lg border-2 border-dashed p-12 text-center transition-colors ${
+      className={`rounded-lg border border-dashed px-4 py-8 sm:p-10 text-center transition-colors ${
         isDragActive
           ? 'border-primary bg-primary/5'
-          : 'border-muted-foreground/25 bg-muted/30'
+          : 'border-muted-foreground/25 bg-card'
       }`}
     >
       <input
         ref={fileInputRef}
         type="file"
+        accept=".pdf,.txt,.docx,.doc"
         onChange={handleChange}
         className="hidden"
         disabled={isUploading}
       />
 
-      <Upload className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+      <Upload className="w-9 h-9 mx-auto text-primary mb-4" />
 
       <h3 className="font-semibold mb-2">Upload a document</h3>
       <p className="text-sm text-muted-foreground mb-6">
-        Drag and drop your file here, or click to browse
+        Drop a file here or choose one from your device.
       </p>
 
       <Button
@@ -84,7 +85,7 @@ export function UploadArea() {
         disabled={isUploading}
         variant="outline"
       >
-        {isUploading ? 'Uploading...' : 'Choose File'}
+        {isUploading ? 'Uploading...' : 'Choose file'}
       </Button>
 
       <p className="text-xs text-muted-foreground mt-4">
